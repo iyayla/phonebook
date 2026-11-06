@@ -1,0 +1,25 @@
+
+services:
+  mongo.db.phonebook:
+    restart: always
+    image: mongo:8.0-rc
+    container_name: mongo.db.phonebook.container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27030:27017"
+    volumes:
+      - mongo.db.phonebook.volume:/data/db
+  mongo.db.phonebook.ui:
+    restart: always
+    image: mongo-express:1.0.2-20-alpine3.19
+    container_name: mongo.db.phonebook.ui.container
+    ports:
+      - 27032:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo.db.phonebook:27017/
+      ME_CONFIG_BASICAUTH: false
+
+volumes:
+  mongo.db.phonebook.volume:
